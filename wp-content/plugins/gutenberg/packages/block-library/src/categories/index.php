@@ -2,7 +2,7 @@
 /**
  * Server-side rendering of the `core/categories` block.
  *
- * @package gutenberg
+ * @package WordPress
  */
 
 /**
@@ -16,11 +16,6 @@ function render_block_core_categories( $attributes ) {
 	static $block_id = 0;
 	$block_id++;
 
-	$align = 'center';
-	if ( isset( $attributes['align'] ) && in_array( $attributes['align'], array( 'left', 'right', 'full' ), true ) ) {
-		$align = $attributes['align'];
-	}
-
 	$args = array(
 		'echo'         => false,
 		'hierarchical' => ! empty( $attributes['showHierarchy'] ),
@@ -32,7 +27,7 @@ function render_block_core_categories( $attributes ) {
 	if ( ! empty( $attributes['displayAsDropdown'] ) ) {
 		$id                       = 'wp-block-categories-' . $block_id;
 		$args['id']               = $id;
-		$args['show_option_none'] = __( 'Select Category', 'gutenberg' );
+		$args['show_option_none'] = __( 'Select Category' );
 		$wrapper_markup           = '<div class="%1$s">%2$s</div>';
 		$items_markup             = wp_dropdown_categories( $args );
 		$type                     = 'dropdown';
@@ -41,15 +36,19 @@ function render_block_core_categories( $attributes ) {
 			$wrapper_markup .= build_dropdown_script_block_core_categories( $id );
 		}
 	} else {
-		$wrapper_markup = '<div class="%1$s"><ul>%2$s</ul></div>';
+		$wrapper_markup = '<ul class="%1$s">%2$s</ul>';
 		$items_markup   = wp_list_categories( $args );
 		$type           = 'list';
 	}
 
-	$class = "wp-block-categories wp-block-categories-{$type} align{$align}";
+	$class = "wp-block-categories wp-block-categories-{$type}";
+
+	if ( isset( $attributes['align'] ) ) {
+		$class .= " align{$attributes['align']}";
+	}
 
 	if ( isset( $attributes['className'] ) ) {
-		$class .= ' ' . $attributes['className'];
+		$class .= " {$attributes['className']}";
 	}
 
 	$block_content = sprintf(
@@ -73,7 +72,7 @@ function build_dropdown_script_block_core_categories( $dropdown_id ) {
 	?>
 	<script type='text/javascript'>
 	/* <![CDATA[ */
-	(function() {
+	( function() {
 		var dropdown = document.getElementById( '<?php echo esc_js( $dropdown_id ); ?>' );
 		function onCatChange() {
 			if ( dropdown.options[ dropdown.selectedIndex ].value > 0 ) {
@@ -92,9 +91,12 @@ function build_dropdown_script_block_core_categories( $dropdown_id ) {
  * Registers the `core/categories` block on server.
  */
 function register_block_core_categories() {
-	register_block_type( 'core/categories', array(
-		'render_callback' => 'render_block_core_categories',
-	) );
+	register_block_type(
+		'core/categories',
+		array(
+			'render_callback' => 'render_block_core_categories',
+		)
+	);
 }
 
 add_action( 'init', 'register_block_core_categories' );

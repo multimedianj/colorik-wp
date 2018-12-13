@@ -2,7 +2,7 @@
 /**
  * Server-side rendering of the `core/latest-comments` block.
  *
- * @package gutenberg
+ * @package WordPress
  */
 
 /**
@@ -25,10 +25,10 @@
  * @param int|WP_Post $post Optional. Post ID or WP_Post object. Default is global $post.
  * @return string The post title if set; "(no title)" if no title is set.
  */
-function gutenberg_draft_or_post_title( $post = 0 ) {
+function wp_latest_comments_draft_or_post_title( $post = 0 ) {
 	$title = get_the_title( $post );
 	if ( empty( $title ) ) {
-		$title = __( '(no title)', 'gutenberg' );
+		$title = __( '(no title)' );
 	}
 	return esc_html( $title );
 }
@@ -40,13 +40,18 @@ function gutenberg_draft_or_post_title( $post = 0 ) {
  *
  * @return string Returns the post content with latest comments added.
  */
-function gutenberg_render_block_core_latest_comments( $attributes = array() ) {
+function render_block_core_latest_comments( $attributes = array() ) {
 	// This filter is documented in wp-includes/widgets/class-wp-widget-recent-comments.php.
-	$comments = get_comments( apply_filters( 'widget_comments_args', array(
-		'number'      => $attributes['commentsToShow'],
-		'status'      => 'approve',
-		'post_status' => 'publish',
-	) ) );
+	$comments = get_comments(
+		apply_filters(
+			'widget_comments_args',
+			array(
+				'number'      => $attributes['commentsToShow'],
+				'status'      => 'approve',
+				'post_status' => 'publish',
+			)
+		)
+	);
 
 	$list_items_markup = '';
 	if ( ! empty( $comments ) ) {
@@ -57,9 +62,15 @@ function gutenberg_render_block_core_latest_comments( $attributes = array() ) {
 		foreach ( $comments as $comment ) {
 			$list_items_markup .= '<li class="wp-block-latest-comments__comment">';
 			if ( $attributes['displayAvatar'] ) {
-				$avatar = get_avatar( $comment, 48, '', '', array(
-					'class' => 'wp-block-latest-comments__comment-avatar',
-				) );
+				$avatar = get_avatar(
+					$comment,
+					48,
+					'',
+					'',
+					array(
+						'class' => 'wp-block-latest-comments__comment-avatar',
+					)
+				);
 				if ( $avatar ) {
 					$list_items_markup .= $avatar;
 				}
@@ -81,11 +92,11 @@ function gutenberg_render_block_core_latest_comments( $attributes = array() ) {
 
 			// `_draft_or_post_title` calls `esc_html()` so we don't need to wrap that call in
 			// `esc_html`.
-			$post_title = '<a class="wp-block-latest-comments__comment-link" href="' . esc_url( get_comment_link( $comment ) ) . '">' . gutenberg_draft_or_post_title( $comment->comment_post_ID ) . '</a>';
+			$post_title = '<a class="wp-block-latest-comments__comment-link" href="' . esc_url( get_comment_link( $comment ) ) . '">' . wp_latest_comments_draft_or_post_title( $comment->comment_post_ID ) . '</a>';
 
 			$list_items_markup .= sprintf(
 				/* translators: 1: author name (inside <a> or <span> tag, based on if they have a URL), 2: post title related to this comment */
-				__( '%1$s on %2$s', 'gutenberg' ),
+				__( '%1$s on %2$s' ),
 				$author_markup,
 				$post_title
 			);
@@ -106,7 +117,7 @@ function gutenberg_render_block_core_latest_comments( $attributes = array() ) {
 	}
 
 	$class = 'wp-block-latest-comments';
-	if ( $attributes['align'] ) {
+	if ( isset( $attributes['align'] ) ) {
 		$class .= " align{$attributes['align']}";
 	}
 	if ( $attributes['displayAvatar'] ) {
@@ -127,41 +138,45 @@ function gutenberg_render_block_core_latest_comments( $attributes = array() ) {
 		'<ol class="%1$s">%2$s</ol>',
 		$classnames,
 		$list_items_markup
-	) : sprintf( '<div class="%1$s">%2$s</div>',
+	) : sprintf(
+		'<div class="%1$s">%2$s</div>',
 		$classnames,
-		__( 'No comments to show.', 'gutenberg' )
+		__( 'No comments to show.' )
 	);
 
 	return $block_content;
 }
 
-register_block_type( 'core/latest-comments', array(
-	'attributes'      => array(
-		'className'      => array(
-			'type' => 'string',
+register_block_type(
+	'core/latest-comments',
+	array(
+		'attributes'      => array(
+			'className'      => array(
+				'type' => 'string',
+			),
+			'commentsToShow' => array(
+				'type'    => 'number',
+				'default' => 5,
+				'minimum' => 1,
+				'maximum' => 100,
+			),
+			'displayAvatar'  => array(
+				'type'    => 'boolean',
+				'default' => true,
+			),
+			'displayDate'    => array(
+				'type'    => 'boolean',
+				'default' => true,
+			),
+			'displayExcerpt' => array(
+				'type'    => 'boolean',
+				'default' => true,
+			),
+			'align'          => array(
+				'type' => 'string',
+				'enum' => array( 'center', 'left', 'right', 'wide', 'full', '' ),
+			),
 		),
-		'commentsToShow' => array(
-			'type'    => 'number',
-			'default' => 5,
-			'minimum' => 1,
-			'maximum' => 100,
-		),
-		'displayAvatar'  => array(
-			'type'    => 'boolean',
-			'default' => true,
-		),
-		'displayDate'    => array(
-			'type'    => 'boolean',
-			'default' => true,
-		),
-		'displayExcerpt' => array(
-			'type'    => 'boolean',
-			'default' => true,
-		),
-		'align'          => array(
-			'type' => 'string',
-			'enum' => array( 'center', 'left', 'right', 'wide', 'full', '' ),
-		),
-	),
-	'render_callback' => 'gutenberg_render_block_core_latest_comments',
-) );
+		'render_callback' => 'render_block_core_latest_comments',
+	)
+);
