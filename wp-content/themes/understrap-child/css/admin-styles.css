@@ -1,0 +1,9 @@
+.menu-top.colorik-theme-style > a {
+    background: #f3615a !important;
+    color: #eee !important;
+    border-bottom: 1px solid #23282D;
+}
+
+.menu-top.colorik-theme-style > a .dashicons-before:before {
+    color: #eee !important;
+}

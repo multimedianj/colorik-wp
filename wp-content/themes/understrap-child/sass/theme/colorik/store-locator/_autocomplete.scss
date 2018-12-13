@@ -1,0 +1,55 @@
+//-------------------------------------
+//-- Store Locator - Autocomplete
+//-------------------------------------
+
+.page-template-page-store-locator {
+    #autocomplete-field {
+        position: absolute;
+        left: 0;
+        color: $color-white;
+        z-index: 9;
+        width: 100%;
+        font-size: rem-calc(18);
+        background: #222;
+        top: rem-calc(60);
+        padding: rem(15 15 0 15);
+        height: rem-calc(40);
+
+        @media #{$sm-up} {
+            top: 0;
+            padding: rem-calc(30 15 0 15);
+            height: rem-calc(60);
+            height: rem-calc(40);
+            padding: rem-calc(20 15 0 15);
+            background: $color-black;
+        }
+
+        @media #{$md-up} {
+            line-height: rem-calc(100);
+            height: rem-calc(100);
+            width: 30%;
+            padding: rem-calc(0 20);
+            font-size: rem-calc(18);
+        }
+
+        @media #{$lg-up} {
+            padding: rem-calc(0 40);
+            font-size: rem-calc(20);
+        }
+    }
+
+    #pac-input {
+        width: 70%;
+        right: 0;
+        left: auto !important; // !important pour overwritter les styles de Understrap
+        margin-top: rem-calc(-100);
+        border: none;
+        line-height: rem-calc(100);
+        height: rem-calc(100);
+        padding: rem-calc(0 40);
+        font-size: rem-calc(20);
+        background: $color-black;
+        color: $color-white;
+        outline: none;
+    }
+}

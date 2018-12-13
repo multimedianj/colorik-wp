@@ -1,0 +1,30 @@
+.login h1 a {
+    width: 320px;
+    height: 150px;
+    background-image: url('../src/img/colorik-theme-wp-login.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.wp-core-ui .button-group.button-large .button, .wp-core-ui .button.button-large {
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 0;
+    text-shadow: none;
+    padding: 7px 15px !important;
+    height: auto !important;
+    float: right;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    background: #f3615a;
+    -ms-transition: 0.4s;
+    -moz-transition: 0.4s;
+    -o-transition: 0.4s;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+}
+
+.wp-core-ui .button-group.button-large .button:hover, .wp-core-ui .button.button-large:hover {
+    background: #000;
+}

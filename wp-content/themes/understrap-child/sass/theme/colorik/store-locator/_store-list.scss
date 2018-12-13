@@ -1,0 +1,18 @@
+//-------------------------------------
+//-- Store Locator - Store-list
+//-------------------------------------
+
+#locations-map {
+    overflow-y: auto;
+    height: 75vh;
+    padding-left: 0;
+    padding-right: 0;
+
+    .location {
+        padding: rem-calc(15);
+
+        &.selected-location {
+            background: $grey-light;
+        }
+    }
+}

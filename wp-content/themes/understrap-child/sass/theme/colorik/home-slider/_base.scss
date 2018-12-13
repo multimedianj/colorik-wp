@@ -1,0 +1,44 @@
+//-------------------------------------
+//-- Home slider - Base
+//-------------------------------------
+
+.container-home-slider {
+    padding-right: 0;
+    padding-left: 0;
+ 
+    .carousel {
+        .carousel-inner {
+            .carousel-item {
+                .d-block {
+                    position: relative;
+                    padding-top: 37%;
+                    background-size: cover;
+                    background-repeat: no-repeat;
+                    background-position: 50% 50%;
+
+                    .carousel-caption {
+                        position: absolute;
+                        top: 50%;
+                        bottom: initial;
+                        left: 50%;
+                        width: 100%;
+                        transform: translate(-50%,-50%);
+
+                        h2 {
+                            font-size: rem-calc(72);
+                            font-weight: 600;
+                            line-height: 1.1;
+                            margin-bottom: rem-calc(20);
+                        }
+
+                        p {
+                            font-size: rem-calc(18);
+                            font-weight: 400;
+                            margin-bottom: 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,39 @@
+//-------------------------------------
+//-- Store Locator - Map
+//-------------------------------------
+
+.page-template-page-store-locator {
+    #map {
+        overflow: visible !important;
+        width: 100%;
+        height: rem-calc(400);
+        margin-top: rem-calc(40);
+        margin-bottom: rem-calc(40);
+    }
+
+    #map-canvas {
+        height: 75vh;
+        position: relative;
+        margin: 0;
+        padding: 0;
+        padding-top: rem-calc(60);
+        overflow: hidden;
+
+        .gm-style {
+            img[src*="https://maps.gstatic.com/mapfiles/api-3/images/mapcnt6.png"] {
+                display: none;
+            }
+
+            .gm-style-iw {
+                color: $color-white;
+                padding: rem-calc(10 5) !important;
+
+                .info_content {
+                    .table {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
