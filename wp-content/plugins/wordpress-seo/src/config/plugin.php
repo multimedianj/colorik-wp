@@ -5,17 +5,18 @@
  * @package Yoast\YoastSEO\Config
  */
 
-namespace Yoast\YoastSEO\Config;
+namespace Yoast\WP\Free\Config;
 
-use Yoast\YoastSEO\WordPress\Integration;
-use Yoast\YoastSEO\WordPress\Integration_Group;
-use Yoast\YoastSEO\Yoast_Model;
+use Yoast\WP\Free\WordPress\Integration;
+use Yoast\WP\Free\WordPress\Integration_Group;
+use Yoast\WP\Free\Yoast_Model;
 use YoastSEO_Vendor\ORM;
 
 /**
  * Bootstraps the plugin.
  */
 class Plugin implements Integration {
+
 	/**
 	 * List of integrations.
 	 *
@@ -33,34 +34,43 @@ class Plugin implements Integration {
 	/**
 	 * The dependency manager to use.
 	 *
-	 * @var Dependency_Management $dependency_management
+	 * @var \Yoast\WP\Free\Config\Dependency_Management $dependency_management
 	 */
 	protected $dependency_management;
 
 	/**
 	 * The database migration to use.
 	 *
-	 * @var Database_Migration $database_migration
+	 * @var \Yoast\WP\Free\Config\Database_Migration $database_migration
 	 */
 	protected $database_migration;
 
 	/**
 	 * Creates a new plugin instance.
 	 *
-	 * @param Dependency_Management|null $dependency_management Class to manage dependency prefixing.
-	 * @param Database_Migration|null    $database_migration    Class to manage database migrations.
+	 * @param \Yoast\WP\Free\Config\Dependency_Management|null $dependency_management Class to manage dependency prefixing.
+	 * @param \Yoast\WP\Free\Config\Database_Migration|null    $database_migration    Class to manage database migrations.
 	 */
 	public function __construct( Dependency_Management $dependency_management = null, Database_Migration $database_migration = null ) {
 		// @codingStandardsIgnoreStart
+		$database_migration_config = array(
+			'directory'  => WPSEO_PATH . 'migrations',
+			'table_name' => 'migrations',
+		);
+
 		$this->dependency_management = $dependency_management ?: new Dependency_Management();
-		$this->database_migration    = $database_migration ?: new Database_Migration( $GLOBALS['wpdb'], $this->dependency_management );
+		$this->database_migration    = $database_migration ?: new Database_Migration(
+			$GLOBALS['wpdb'],
+			$this->dependency_management,
+			$database_migration_config
+		);
 		// @codingStandardsIgnoreEnd
 	}
 
 	/**
 	 * Adds an integration to the stack
 	 *
-	 * @param Integration $integration Integration to add.
+	 * @param \Yoast\WP\Free\WordPress\Integration $integration Integration to add.
 	 *
 	 * @return void
 	 */
@@ -124,7 +134,7 @@ class Plugin implements Integration {
 	 * @return bool
 	 */
 	protected function is_admin() {
-		return is_admin();
+		return \is_admin();
 	}
 
 	/**
@@ -133,7 +143,7 @@ class Plugin implements Integration {
 	 * @return bool
 	 */
 	protected function is_frontend() {
-		return ! is_admin();
+		return ! \is_admin();
 	}
 
 	/**
@@ -162,11 +172,11 @@ class Plugin implements Integration {
 	 * @return void
 	 */
 	protected function configure_orm() {
-		ORM::configure( 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME );
-		ORM::configure( 'username', DB_USER );
-		ORM::configure( 'password', DB_PASSWORD );
+		ORM::configure( 'mysql:host=' . \DB_HOST . ';dbname=' . \DB_NAME );
+		ORM::configure( 'username', \DB_USER );
+		ORM::configure( 'password', \DB_PASSWORD );
 
-		Yoast_Model::$auto_prefix_models = '\\Yoast\\YoastSEO\\Models\\';
+		Yoast_Model::$auto_prefix_models = '\\Yoast\\WP\\Free\\Models\\';
 	}
 
 	/**
@@ -174,7 +184,7 @@ class Plugin implements Integration {
 	 *
 	 * @param array $integrations Integrations to load into the group.
 	 *
-	 * @return Integration_Group.
+	 * @return \Yoast\WP\Free\WordPress\Integration_Group
 	 */
 	protected function get_integration_group( array $integrations = array() ) {
 		return new Integration_Group( $integrations );
@@ -189,8 +199,8 @@ class Plugin implements Integration {
 		/**
 		 * Action: 'wpseo_load_integrations' - Hook to register additional Yoast SEO Integrations.
 		 *
-		 * @api \Yoast\YoastSEO\Config\Plugin The Plugin object to register integrations on.
+		 * @api \Yoast\WP\Free\Config\Plugin The Plugin object to register integrations on.
 		 */
-		do_action( 'wpseo_load_integrations', $this );
+		\do_action( 'wpseo_load_integrations', $this );
 	}
 }
